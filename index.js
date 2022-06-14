@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
-const port = process.env.PROT || 4000;
+require("dotenv").config();
+const port = process.env.PORT || 4000;
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const cors = require("cors");
 app.use(cors());
@@ -18,16 +19,40 @@ async function run() {
     await client.connect();
     const mealCollection = client.db("redOnion").collection("meal");
     const cartCollection = client.db("redOnion").collection("cart");
+    const lunchCollection = client.db("redOnion").collection("lunch");
+    const dinnerCollection = client.db("redOnion").collection("dinner");
 
     app.get("/meal", async (req, res) => {
       const meal = await mealCollection.find().toArray();
       res.send(meal);
+    });
+    app.get("/get-lunch", async (req, res) => {
+      const lunch = await lunchCollection.find().toArray();
+      res.send(lunch);
+    });
+    app.get("/get-dinnger", async (req, res) => {
+      const dinner = await dinnerCollection.find().toArray();
+      res.send(dinner);
     });
 
     app.get("/meal/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const result = await mealCollection.findOne(query);
+
+      res.send(result);
+    });
+    app.get("/dinner/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await dinnerCollection.findOne(query);
+      res.send(result);
+    });
+    app.get("/lunch/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await lunchCollection.findOne(query);
+
       res.send(result);
     });
 
