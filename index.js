@@ -48,7 +48,7 @@ async function run() {
       const lunch = await lunchCollection.find().toArray();
       res.send(lunch);
     });
-    app.get("/get-dinnger", async (req, res) => {
+    app.get("/get-dinner", async (req, res) => {
       const dinner = await dinnerCollection.find().toArray();
       res.send(dinner);
     });
@@ -124,6 +124,12 @@ async function run() {
       const id = req.params.id;
       const filter = { _id: ObjectId(id) };
       const paymentResult = await dinnerCollection.findOne(filter);
+      res.send(paymentResult);
+    });
+    app.get("/addCart-payment/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id) };
+      const paymentResult = await cartCollection.findOne(filter);
       res.send(paymentResult);
     });
   } finally {
