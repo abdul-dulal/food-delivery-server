@@ -23,6 +23,7 @@ async function run() {
     const cartCollection = client.db("redOnion").collection("cart");
     const lunchCollection = client.db("redOnion").collection("lunch");
     const dinnerCollection = client.db("redOnion").collection("dinner");
+    const paidOrder = client.db("redOnion").collection("paid");
 
     //payment intenet
 
@@ -92,10 +93,8 @@ async function run() {
 
     app.get("/order", async (req, res) => {
       const email = req.query.email;
-
       const query = { email: email };
       const result = await cartCollection.find(query).toArray();
-
       res.send(result);
     });
 
@@ -131,6 +130,21 @@ async function run() {
       const filter = { _id: ObjectId(id) };
       const paymentResult = await cartCollection.findOne(filter);
       res.send(paymentResult);
+    });
+
+    // paid product
+    app.post("/my-order", async (req, res) => {
+      const order = req.body;
+      const result = await paidOrder.insertOne(order);
+      res.send(result);
+    });
+
+    app.get("/MyOrder", async (req, res) => {
+      const email = req.query.email;
+      const query = { email: email };
+      const result = await paidOrder.find(query).toArray();
+
+      res.send(result);
     });
   } finally {
   }
